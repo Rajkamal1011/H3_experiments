@@ -11,7 +11,7 @@ testset = df["Test_String"].tolist()
 outputs = []
 
 # Define parameters
-put_loc = "PUT_LOC"  # Directory where the command should be run
+put_loc = "/home/user"  # Directory where the command should be run
 script_path = os.path.join(put_loc, "H3/examples/generate_text_h3.py")
 ckpt_path = "H3-125M/model.pt"
 dmodel = 768
