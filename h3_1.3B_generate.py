@@ -25,7 +25,7 @@ for idx, prompt in enumerate(testset):
     command = [
         "PYTHONPATH=$(pwd)/H3", "python", script_path,
         "--ckpt", ckpt_path,
-        "--prompt", prompt,
+        "--prompt", f'"{prompt}"',
         "--dmodel", str(dmodel),
         "--nlayer", str(nlayer),
         "--attn-layer-idx", attn_layer_idx,
