@@ -1,0 +1,60 @@
+import pandas as pd
+import subprocess
+import os
+
+# Load the test set from CW_testset.xlsx
+input_file = "CW_testset.xlsx"
+df = pd.read_excel(input_file)
+testset = df["Test_String"].tolist()
+
+# Prepare a list to store the outputs
+outputs = []
+
+# Define parameters
+put_loc = "PUT_LOC"  # Directory where the command should be run
+script_path = os.path.join(put_loc, "H3/examples/generate_text_h3.py")
+ckpt_path = "H3-1.3B/model.pt"
+dmodel = 2048
+nlayer = 24
+attn_layer_idx = "8 16"
+nheads = 16
+
+# Iterate over each test string in the test set
+for idx, prompt in enumerate(testset):
+    # Format the command to include the current prompt
+    command = [
+        "PYTHONPATH=$(pwd)/H3", "python", script_path,
+        "--ckpt", ckpt_path,
+        "--prompt", prompt,
+        "--dmodel", str(dmodel),
+        "--nlayer", str(nlayer),
+        "--attn-layer-idx", attn_layer_idx,
+        "--nheads", str(nheads)
+    ]
+    
+    try:
+        # Execute the command in the specified directory and capture the output
+        result = subprocess.run(
+            " ".join(command),
+            shell=True,
+            cwd=put_loc,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        
+        # Append the model output to the list
+        outputs.append(result.stdout.strip())
+        print(f"Processed sample {idx + 1}/{len(testset)}")
+        
+    except subprocess.CalledProcessError as e:
+        # If there is an error, store the error message and continue
+        print(f"Error processing sample {idx + 1}: {e}")
+        outputs.append(f"Error: {e}")
+
+# Save the outputs to a new Excel file
+output_df = pd.DataFrame({"Test_String": testset, "Output": outputs})
+output_df.to_excel("H3_outputs_1.3B.xlsx", index=False)
+
+print("All outputs have been saved to H3_outputs_1.3B.xlsx")
+
