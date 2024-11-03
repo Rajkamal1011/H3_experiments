@@ -3,7 +3,7 @@ import subprocess
 import os
 
 # Load the test set from CW_testset.xlsx
-input_file = "CW_testset.xlsx"
+input_file = "CW_testset2.xlsx"
 df = pd.read_excel(input_file)
 testset = df["Test_String"].tolist()
 
@@ -54,7 +54,7 @@ for idx, prompt in enumerate(testset):
 
 # Save the outputs to a new Excel file
 output_df = pd.DataFrame({"Test_String": testset, "Output": outputs})
-output_df.to_excel("H3_outputs_125M.xlsx", index=False)
+output_df.to_excel("H3_outputs2_125M.xlsx", index=False)
 
-print("All outputs have been saved to H3_outputs_125M.xlsx")
+print("All outputs have been saved to H3_outputs2_125M.xlsx")
 
